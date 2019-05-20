@@ -1,7 +1,5 @@
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -14,10 +12,10 @@ public class Metric {
     public Metric() {
     }
 
-    public void getteur(){
+    public void getteur(String compName){
  try {
 
-        URL url = new URL("http://localhost:9000/api/measures/component?metricKeys=bugs,confirmed_issues,code_smells,sqale_index,coverage,duplicated_lines_density,duplicated_blocks&component=hello");//your url i.e fetch data from .
+        URL url = new URL("http://localhost:9000/api/measures/component?metricKeys=bugs,confirmed_issues,code_smells,sqale_index,coverage,duplicated_lines_density,duplicated_blocks&component="+compName+"");//your url i.e fetch data from .
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
         conn.setRequestProperty("hello", "application/json");
@@ -33,13 +31,24 @@ public class Metric {
             JsonElement j=js.getAsJsonObject("component").getAsJsonArray("measures").get(i);
             System.out.println(""+j+"");
         }*/
+
+        JsonArray metrics = js.getAsJsonObject("component").getAsJsonArray("measures");
+
+        Map<String, Double> map = new HashMap<>();
+        for(JsonElement metric : metrics) {
+            String name = metric.getAsJsonObject().get("metric").toString();
+            Double value = metric.getAsJsonObject().get("value").getAsDouble();
+            map.put(name, value);
+        }
+        System.out.println(map);
+/*
         for (int a=0;a<7;a++)
         {
             JsonElement j=js.getAsJsonObject("component").getAsJsonArray("measures").get(a);
-            Map<JsonElement ,JsonElement > map=new HashMap<JsonElement, JsonElement>();
+            Map <JsonElement ,JsonElement > map=new HashMap<JsonElement, JsonElement>();
             map.put(j.getAsJsonObject().get("metric"),j.getAsJsonObject().get("value"));
             System.out.println(""+map+"");
-        }
+        }*/
 
 
 
