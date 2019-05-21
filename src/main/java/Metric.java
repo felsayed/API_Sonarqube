@@ -12,11 +12,11 @@ import java.util.Map;
 
 public class Metric {
 
-    public Metric() {
-    }
+    private Map<String,String> m;
 
-    public Metric(Map<String, String> m) {
-        this.m = m;
+    public Metric() {
+        this.m = new HashMap<>();
+        addMetric(this.m);
     }
 
     private String askedMetrics = "bugs,confirmed_issues,code_smells,sqale_index,coverage,duplicated_lines_density,duplicated_blocks";
@@ -24,33 +24,17 @@ public class Metric {
     public String getAskedMetrics() {
         return askedMetrics;
     }
-    private Map<String,String> m=new HashMap<>();
-    void addmetric(Map m){
-        m.put("nombre de bug","bugs");
-        m.put("vulnérabilités","confirmed_issues");
-        m.put("code smells","code smells");
-        m.put("debt","sqale_index");
+
+    void addMetric(Map<String, String> m) {
+        m.put("bugs", "nombre de bug");
+        m.put("confirmed_issues", "vulnérabilités");
+        m.put("code_smells", "code smells");
+        m.put("sqale_index", "debt");
         m.put("coverage","coverage");
-        m.put("duplications","duplicated_lines_density");
-        m.put("duplicated blocks","duplicated_blocks");
+        m.put("duplicated_lines_density", "duplications");
+        m.put("duplicated_blocks", "duplicated blocks");
 
     }
-
-    public static String getRealName(Map m,String name)
-    {
-        for(Object s:m.keySet()){
-            if(m.get(s).equals(name)){
-                return s.toString();
-            }
-            else{
-                return "Error";
-            }
-        }
-        return null;
-    }
-
-
-
 
     public Map<String, Double> getMetrics(String compName){
 
@@ -73,9 +57,9 @@ public class Metric {
             String name;
             Double value;
             for(JsonElement metric : metrics) {
-                name = metric.getAsJsonObject().get("metric").toString();
+                name = metric.getAsJsonObject().get("metric").getAsString();
                 value = metric.getAsJsonObject().get("value").getAsDouble();
-                map.put(getRealName(this.m,name), value);
+                map.put(this.m.get(name), value);
             }
             System.out.println(map);
             conn.disconnect();
