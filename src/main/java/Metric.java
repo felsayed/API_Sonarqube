@@ -10,7 +10,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Metric {
+public class Metric implements Interface.Metric{
 
     private Map<String,String> m;
 
@@ -25,7 +25,7 @@ public class Metric {
         return askedMetrics;
     }
 
-    void addMetric(Map<String, String> m) {
+    public void addMetric(Map<String, String> m) {
         m.put("bugs", "nombre de bug");
         m.put("confirmed_issues", "vulnérabilités");
         m.put("code_smells", "code smells");
